@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dropbox Chooser Demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="APP_KEY"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="small-12 columns">
+            <h1>Dropbox Chooser Demo</h1>
+            <div id="dropbox-container"></div>
+            <hr>
+            <ul id="img_list" class="small-block-grid-1 medium-block-grid-2 large-block-grid-3">
+            </ul>
+        </div>
+    </div>
+</div>
+<script>
+    options = {
+        success: function(files) {
+            files.forEach(function(file) {
+                add_img_to_list(file);
+            });
+        },
+        cancel: function() {
+            //optional
+        },
+        linkType: "preview", // "preview" or "direct"
+        multiselect: true, // true or false
+        extensions: ['.png', '.jpg'],
+    };
+
+    var button = Dropbox.createChooseButton(options);
+    document.getElementById("dropbox-container").appendChild(button);
+
+    function add_img_to_list(file) {
+        var li  = document.createElement('li');
+        var a   = document.createElement('a');
+        a.href = file.link;
+        var img = new Image();
+        var src = file.thumbnailLink;
+        src = src.replace("bounding_box=75", "bounding_box=256");
+        src = src.replace("mode=fit", "mode=crop");
+        img.src = src;
+        img.className = "th"
+        document.getElementById("img_list").appendChild(li).appendChild(a).appendChild(img);
+    }
+</script>
+</body>
+</html>
